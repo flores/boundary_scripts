@@ -96,7 +96,7 @@ function setup_cert_key() {
 
   if [ $? -eq 1 ]; then
     echo "Creating meter config directory ($TARGET_DIR) ..."
-    sudo mkdir $TARGET_DIR
+    mkdir $TARGET_DIR
   fi
 
   test -f $TARGET_DIR/key.pem
@@ -104,14 +104,14 @@ function setup_cert_key() {
   if [ $? -eq 1 ]; then
     echo "Key file is missing, attempting to download ..."
     echo "Downloading meter key for $2"
-    sudo curl -s -u $1: $2/key.pem | sudo tee $TARGET_DIR/key.pem > /dev/null
+    curl -s -u $1: $2/key.pem | tee $TARGET_DIR/key.pem > /dev/null
 
     if [ $? -gt 0 ]; then
       echo "Error downloading key ..."
       exit 1
     fi
 
-    sudo chmod 600 $TARGET_DIR/key.pem
+    chmod 600 $TARGET_DIR/key.pem
   fi
 
   test -f $TARGET_DIR/cert.pem
@@ -119,14 +119,14 @@ function setup_cert_key() {
   if [ $? -eq 1 ]; then
     echo "Cert file is missing, attempting to download ..."
     echo "Downloading meter certificate for $2"
-    sudo curl -s -u $1: $2/cert.pem | sudo tee $TARGET_DIR/cert.pem > /dev/null
+    curl -s -u $1: $2/cert.pem | tee $TARGET_DIR/cert.pem > /dev/null
 
     if [ $? -gt 0 ]; then
       echo "Error downloading certificate ..."
       exit 1
     fi
 
-    sudo chmod 600 $TARGET_DIR/cert.pem
+    chmod 600 $TARGET_DIR/cert.pem
   fi
 }
 
@@ -213,22 +213,22 @@ if [ ! -z $APICREDS ]; then
       echo "Installing curl ..."
 
       if [ $DISTRO = "Ubuntu" ]; then
-        sudo apt-get update > /dev/null
-        sudo apt-get install curl
+        apt-get update > /dev/null
+        apt-get install curl
       fi
 
       if [ $DISTRO = "Debian" ]; then
-        sudo apt-get update > /dev/null
-        sudo apt-get install curl
+        apt-get update > /dev/null
+        apt-get install curl
       fi
 
       if [ $DISTRO = "CentOS" ]; then
         if [ $MACHINE = "i686" ]; then
-          sudo yum install curl.i686
+          yum install curl.i686
         fi
 
         if [ $MACHINE = "x86_64" ]; then
-          sudo yum install curl.x86_64
+          yum install curl.x86_64
         fi
       fi
 
@@ -296,8 +296,8 @@ if [ ! -z $APICREDS ]; then
       if [ $DEPS = "true" ]; then
         echo "Installing apt-transport-https ..."
 
-        sudo apt-get update > /dev/null
-        sudo apt-get install apt-transport-https
+        apt-get update > /dev/null
+        apt-get install apt-transport-https
       else
         echo "To automatically install required components for Meter Install, rerun setup_meter.sh with -d flag."
         exit 1
@@ -340,11 +340,11 @@ if [ ! -z $APICREDS ]; then
 
       ec2_tag $APIKEY $METER_LOCATION
 
-      sudo apt-get update > /dev/null
-      curl -s https://$APT/boundary.list | sudo tee /etc/apt/sources.list.d/boundary.list > /dev/null
-      curl -s https://$APT/ubuntu/APT-GPG-KEY-Boundary | sudo apt-key add -
-      sudo apt-get update > /dev/null
-      sudo apt-get install bprobe
+      apt-get update > /dev/null
+      curl -s https://$APT/boundary.list | tee /etc/apt/sources.list.d/boundary.list > /dev/null
+      curl -s https://$APT/ubuntu/APT-GPG-KEY-Boundary | apt-key add -
+      apt-get update > /dev/null
+      apt-get install bprobe
     else
       echo "Detected ubuntu but with an unsupported version ($MAJOR_VERSION.$MINOR_VERSION)"
       echo "Boundary Meters can only be installed on Ubuntu 10.04.  For additional Operating System support, please contact support@boundary.com"
@@ -365,8 +365,8 @@ if [ ! -z $APICREDS ]; then
       if [ $DEPS = "true" ]; then
 	echo "Installing apt-transport-https ..."
 
-        sudo apt-get update > /dev/null
-        sudo apt-get install apt-transport-https
+        apt-get update > /dev/null
+        apt-get install apt-transport-https
       else
         echo "To automatically install required components for Meter Install, rerun setup_meter.sh with -d flag."
         exit 1
@@ -408,11 +408,11 @@ if [ ! -z $APICREDS ]; then
 
       ec2_tag $APIKEY $METER_LOCATION
 
-      sudo apt-get update > /dev/null
-      curl -s https://$APT/boundary.list | sudo tee /etc/apt/sources.list.d/boundary.list > /dev/null
-      curl -s https://$APT/ubuntu/APT-GPG-KEY-Boundary | sudo apt-key add -
-      sudo apt-get update > /dev/null
-      sudo apt-get install bprobe
+      apt-get update > /dev/null
+      curl -s https://$APT/boundary.list | tee /etc/apt/sources.list.d/boundary.list > /dev/null
+      curl -s https://$APT/ubuntu/APT-GPG-KEY-Boundary | apt-key add -
+      apt-get update > /dev/null
+      apt-get install bprobe
     else
       echo "Detected Debian but with unsupported ($MAJOR_VERSION.$MINOR_VERSION)"
       echo "Boundary Meters have been tested with Debian 6.0. For additional Operating System support, please contact support@boundary.com"
@@ -459,9 +459,9 @@ if [ ! -z $APICREDS ]; then
 
       ec2_tag $APIKEY $METER_LOCATION
 
-      curl -s https://$YUM/boundary_"$ARCH"bit.repo | sudo tee /etc/yum.repos.d/boundary.repo > /dev/null
-      curl -s https://$YUM/RPM-GPG-KEY-Boundary | sudo tee /etc/pki/rpm-gpg/RPM-GPG-KEY-Boundary > /dev/null
-      sudo yum install bprobe
+      curl -s https://$YUM/boundary_"$ARCH"bit.repo | tee /etc/yum.repos.d/boundary.repo > /dev/null
+      curl -s https://$YUM/RPM-GPG-KEY-Boundary | tee /etc/pki/rpm-gpg/RPM-GPG-KEY-Boundary > /dev/null
+      yum install bprobe
     else
       echo "Detected centos but with an unsupported version ($MAJOR_VERSION)"
       echo "Boundary Meters can only be installed on CentOS 5.x.  For additional Operating System support, please contact support@boundary.com"
